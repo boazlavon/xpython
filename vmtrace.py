@@ -207,6 +207,8 @@ class PyVMTraced(PyVM):
         )
 
         opoffset = 0
+        counter = 0
+        #print('<FullExecution>')
         while True:
             (
                 byte_name,
@@ -216,15 +218,28 @@ class PyVMTraced(PyVM):
                 opoffset,
                 line_number,
             ) = self.parse_byte_and_args(byte_code)
+            counter += 1
 
+            # import inspect
+            # stack = inspect.stack()
+            # for i, frame_info in enumerate(stack):
+            #     print(f"Frame {i}: Function '{frame_info.function}' in {frame_info.filename}, line {frame_info.lineno}")
             if log.isEnabledFor(logging.INFO):
+                #print(f"<ExecutionEntry {counter}>")
+                print(f"<ExecutionEntry>")
+                #print(f"\t<Count> {counter} </Counter>")
+                #print(f"\t<ByteCodeExecution>")
                 self.log(byte_name, intArg, arguments, opoffset, line_number)
+                #print(f"\t</ByteCodeExecution>")
+                print('</ExecutionEntry>')
+                print()
 
             if (
                 frame.f_trace
                 and line_number is not None
                 and frame.event_flags & (PyVMEVENT_LINE | PyVMEVENT_INSTRUCTION)
             ):
+                #print('<Line>')
                 result = frame.f_trace(
                     "line",
                     opoffset,
@@ -235,7 +250,10 @@ class PyVMTraced(PyVM):
                     arguments,
                     self,
                 )
+                #print(f'<LineResult> {result} </LineResult>')
+                #print('</Line>')
             elif frame.f_trace and frame.event_flags & PyVMEVENT_INSTRUCTION:
+                #print('<Instruction>')
                 result = frame.f_trace(
                     "instruction",
                     opoffset,
@@ -246,7 +264,11 @@ class PyVMTraced(PyVM):
                     arguments,
                     self,
                 )
+                #print('</Instruction>')
             else:
+                #print(f'<Event-{frame.event_flags}>')
+                #print(f'<Result> {True} </Result>')
+                #print(f'</Event-{frame.event_flags}>')
                 result = True
 
             if result is None:
@@ -260,10 +282,13 @@ class PyVMTraced(PyVM):
             elif isinstance(result, str):
                 if result == "skip":
                     # Don't run instruction
+                    #print('</FullExecution>')
                     continue
                 elif result == "return":
                     # Immediate return with value
                     why = result
+                    #print(f'<Why> {why} </Why>')
+                    #print('</FullExecution>')
                     break
                 elif result == "finish":
                     # Continue execution without tracing
@@ -271,13 +296,18 @@ class PyVMTraced(PyVM):
 
             # When unwinding the block stack, we need to keep track of why we
             # are doing it.
+            #print('<Dispatch>')
             why = self.dispatch(byte_name, intArg, arguments, opoffset, line_number)
+            #print('</Dispatch>')
+            #print()
 
             if why == "exception":
+                #print('<Exception>')
                 # Deal with exceptions encountered while executing the op.
                 if not self.in_exception_processing:
                     self.last_traceback = traceback_from_frame(self.frame)
                     self.in_exception_processing = True
+                #print('</Exception>')
 
             elif why == "reraise":
                 why = "exception"
@@ -288,10 +318,12 @@ class PyVMTraced(PyVM):
                     why = self.manage_block_stack(why)
 
             if why:
+                #print(f'<Why> {why} </Why>')
+                #print('</FullExecution>')
                 break
-
             pass  # while True
 
+        #print('</FullExecution>')
         callback = frame.f_trace or self.callback
         if why == "exception":
             if (
@@ -350,6 +382,7 @@ class PyVMTraced(PyVM):
                 self.return_value,
                 self,
             )
+
 
         return self.return_value
 

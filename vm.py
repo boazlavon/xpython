@@ -277,6 +277,7 @@ class PyVM(object):
         # The callargs default is safe because we never modify the dict.
         # pylint: disable=dangerous-default-value
 
+        print('<NewFrame>')
         log.debug(
             "make_frame: code=%r, callargs=%s, f_globals=%r, f_locals=%r",
             code,
@@ -319,6 +320,7 @@ class PyVM(object):
         frame.linestarts = dict(self.opc.findlinestarts(code, dup_lines=True))
 
         log.debug("%r", frame)
+        print('</NewFrame>')
         return frame
 
     def push_frame(self, frame):
@@ -372,7 +374,9 @@ class PyVM(object):
         """run code using f_globals and f_locals in our VM"""
         frame = self.make_frame(code, f_globals=f_globals, f_locals=f_locals)
         try:
+            print('<RunCode>')
             val = self.eval_frame(frame)
+            print('</RunCode>')
         except Exception:
             # Until we get test/vmtest.py under control:
             if self.vmtest_testing:
@@ -517,7 +521,7 @@ class PyVM(object):
             arguments,
             offset,
             line_number,
-            log.isEnabledFor(logging.DEBUG),
+            log.isEnabledFor(logging.INFO),
             vm=self,
         )
         indent = "    " * (len(self.frames) - 1)
@@ -527,12 +531,6 @@ class PyVM(object):
         log.debug("  %sframe.stack: %s" % (indent, stack_rep))
         #log.debug("  %sblocks     : %s" % (indent, block_stack_rep))
         log.info("%s%s" % (indent, op))
-        import inspect
-        stack = inspect.stack()
-        for i, frame_info in enumerate(stack):
-            print(f"Frame {i}: Function '{frame_info.function}' in {frame_info.filename}, line {frame_info.lineno}")
-
-
 
     def dispatch(self, bytecode_name, int_arg, arguments, offset, line_number):
         """Dispatch by bytecode_name to the corresponding methods.
@@ -700,6 +698,7 @@ class PyVM(object):
 
         self.push_frame(frame)
         offset = 0
+
         while True:
             (
                 bytecode_name,
