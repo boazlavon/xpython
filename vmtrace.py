@@ -226,12 +226,12 @@ class PyVMTraced(PyVM):
             #     print(f"Frame {i}: Function '{frame_info.function}' in {frame_info.filename}, line {frame_info.lineno}")
             if log.isEnabledFor(logging.INFO):
                 #print(f"<ExecutionEntry {counter}>")
-                print(f"<ExecutionEntry>")
+                print(f"[[[ExecutionEntry]]]")
                 #print(f"\t<Count> {counter} </Counter>")
                 #print(f"\t<ByteCodeExecution>")
                 self.log(byte_name, intArg, arguments, opoffset, line_number)
                 #print(f"\t</ByteCodeExecution>")
-                print('</ExecutionEntry>')
+                print('[[[/ExecutionEntry]]]')
                 print()
 
             if (
