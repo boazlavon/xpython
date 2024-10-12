@@ -126,8 +126,8 @@ def format_instruction(
         else LINE_NUMBER_WIDTH_FMT % line_number
     )
     mess = "%s%3d: %s%s %s" % (line_str, offset, bytecode_name, stack_args, argrepr)
-    if extra_debug and frame:
-        mess += " %s in %s:%s" % (code.co_name, code.co_filename, frame.f_lineno)
+    # if extra_debug and frame:
+    #     mess += " %s in %s:%s" % (code.co_name, code.co_filename, frame.f_lineno)
     return mess
 
 
@@ -528,9 +528,11 @@ class PyVM(object):
         stack_rep = repper(self.frame.stack)
         block_stack_rep = repper(self.frame.block_stack)
 
-        log.debug("  %sframe.stack: %s" % (indent, stack_rep))
+        log.debug("  %s             %s" % (indent, stack_rep))
+        log.info("%s" % (op,))
+        #log.debug("  %sframe.stack: %s" % (indent, stack_rep))
         #log.debug("  %sblocks     : %s" % (indent, block_stack_rep))
-        log.info("%s%s" % (indent, op))
+        #log.info("%s%s" % (indent, op))
 
     def dispatch(self, bytecode_name, int_arg, arguments, offset, line_number):
         """Dispatch by bytecode_name to the corresponding methods.

@@ -229,8 +229,11 @@ class PyVMTraced(PyVM):
                 print(f"[[[ExecutionEntry]]]")
                 #print(f"\t<Count> {counter} </Counter>")
                 #print(f"\t<ByteCodeExecution>")
+                print('[[[InstructionExecution]]]')
                 self.log(byte_name, intArg, arguments, opoffset, line_number)
+                print('[[[/InstructionExecution]]]')
                 #print(f"\t</ByteCodeExecution>")
+                print(f'[[[InstructionOpOffset]]] {opoffset} [[[/InstructionOpOffset]]]')
                 print('[[[/ExecutionEntry]]]')
                 print()
 
