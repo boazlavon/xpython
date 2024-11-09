@@ -374,9 +374,9 @@ class PyVM(object):
         """run code using f_globals and f_locals in our VM"""
         frame = self.make_frame(code, f_globals=f_globals, f_locals=f_locals)
         try:
-            print('[[[RunCode]]]')
+            #print('[[[RunCode]]]')
             val = self.eval_frame(frame)
-            print('[[[/RunCode]]]')
+            #print('[[[/RunCode]]]')
         except Exception:
             # Until we get test/vmtest.py under control:
             if self.vmtest_testing:
