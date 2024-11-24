@@ -377,8 +377,10 @@ class PyVM(object):
             #print('[[[RunCode]]]')
             val = self.eval_frame(frame)
             #print('[[[/RunCode]]]')
-        except Exception:
+        except Exception as e:
             # Until we get test/vmtest.py under control:
+            if e.__dict__['traced'] and e.__dict__['traced'] == True:
+                raise
             if self.vmtest_testing:
                 raise
             if self.last_traceback:
@@ -586,11 +588,13 @@ class PyVM(object):
             # FIXME: dry code
             if not self.in_exception_processing:
                 if self.last_exception[0] != SystemExit:
-                    log.info(
-                        (
-                            "exception in the execution of "
-                            "instruction:\n\t%s"
-                            % self.format_instruction(
+                    # log.info(
+                    #     (
+                    #         "exception in the execution of "
+                    #         "instruction:\n\t%s"
+                    #         %                         )
+                    # )
+                    instruction_info = self.format_instruction(
                                 self.frame,
                                 self.opc,
                                 bytecode_name,
@@ -600,8 +604,11 @@ class PyVM(object):
                                 line_number,
                                 False,
                             )
-                        )
-                    )
+                    exception_type = self.last_exception[0]
+                    print(f"[[[ExecutionEntry]]]")
+                    print(f"[[[ExceptionType]]]\n{exception_type}\n[[[/ExceptionType]]]")
+                    print(f"[[[InstructionOpOffset]]]\n{offset}\n[[[/InstructionOpOffset]]]")
+                    print('[[[/ExecutionEntry]]]')
                 if not self.last_traceback:
                     self.last_traceback = traceback_from_frame(self.frame)
                 self.in_exception_processing = True
@@ -723,12 +730,15 @@ class PyVM(object):
                 if not self.in_exception_processing:
                     # FIXME: DRY code
                     if self.last_exception[0] != SystemExit:
-                        log.info(
-                            (
-                                "exception in the execution of "
-                                "instruction:\n\t%s"
-                                % self.format_instruction(
-                                    frame,
+                        # log.info(
+                        #     (
+                        #         "exception in the execution of "
+                        #         "instruction:\n\t%s"
+                        #         %                         )
+                        # )
+                        exception_type = self.last_exception[0]
+                        instruction_info = self.format_instruction(
+                                    self.frame,
                                     self.opc,
                                     bytecode_name,
                                     int_arg,
@@ -737,11 +747,13 @@ class PyVM(object):
                                     line_number,
                                     False,
                                 )
-                            )
-                        )
-                    if self.last_traceback is None:
-                        self.last_traceback = traceback_from_frame(frame)
-                    self.in_exception_processing = True
+                        print(f"[[[ExecutionEntry]]]")
+                        print(f"[[[ExceptionType]]]\n{exception_type}\n[[[/ExceptionType]]]")
+                        print(f"[[[InstructionOpOffset]]]\n{offset}\n[[[/InstructionOpOffset]]]")
+                        print('[[[/ExecutionEntry]]]')
+                        if self.last_traceback is None:
+                            self.last_traceback = traceback_from_frame(frame)
+                        self.in_exception_processing = True
 
             elif why == "reraise":
                 why = "exception"

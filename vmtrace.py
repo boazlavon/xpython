@@ -2,6 +2,7 @@
 This can be used in a debugger or profiler.
 """
 
+
 import logging
 
 from xdis import IS_PYPY, PYTHON_VERSION_TRIPLE, codeType2Portable
@@ -363,7 +364,9 @@ class PyVMTraced(PyVM):
             if self.last_exception and self.last_exception[0]:
                 # For now, we are dropping the traceback;
                 # ".with_excpetion(self.last_exception[2])
-                raise self.last_exception[1]
+                e = self.last_exception[1]
+                e.__dict__['traced'] = True
+                raise e
                 # Older code which may be of use sometimes
                 # six.reraise(*self.last_exception)
             else:
