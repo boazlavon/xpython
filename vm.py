@@ -526,12 +526,23 @@ class PyVM(object):
             log.isEnabledFor(logging.INFO),
             vm=self,
         )
-        indent = "    " * (len(self.frames) - 1)
+        #indent = "    " * (len(self.frames) - 1)
         stack_rep = repper(self.frame.stack)
         block_stack_rep = repper(self.frame.block_stack)
 
-        log.debug("  %s             %s" % (indent, stack_rep))
+
+        print('[[[FrameStack]]]')
+        log.debug("%s" % (stack_rep))
+        print('[[[/FrameStack]]]')
+        print('[[[BlockStack]]]')
+        log.debug("%s" % (block_stack_rep))
+        print('[[[/BlockStack]]]')
+        print('[[[Instruction]]]')
         log.info("%s" % (op,))
+        print('[[[/Instruction]]]')
+        print('[[[InstructionOpOffset]]]')
+        log.info("%s" % (offset,))
+        print('[[[/InstructionOpOffset]]]')
         #log.debug("  %sframe.stack: %s" % (indent, stack_rep))
         #log.debug("  %sblocks     : %s" % (indent, block_stack_rep))
         #log.info("%s%s" % (indent, op))

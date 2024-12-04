@@ -5,6 +5,7 @@ import linecache
 import types
 from copy import copy
 from sys import stderr
+import json
 
 from xdis import CO_GENERATOR, CO_ITERABLE_COROUTINE, iscode
 from xdis.cross_dis import findlinestarts
@@ -376,14 +377,15 @@ class Block(object):
         return
 
     def __repr__(self):
-        if self.handler is None:
-            return "<Block type: %s, stack level: %d" % (self.type, self.level)
-        else:
-            return "<Block type: %s, end offset: @%d, stack level: %d" % (
-                self.type,
-                self.handler,
-                self.level,
-            )
+        block_info = {
+            "type": self.type,
+            "stack_level": self.level,
+        }
+        if self.handler is not None:
+            block_info["end_offset"] = self.handler
+        
+        return json.dumps(block_info, indent=4)
+
 
 
 class Frame(object):
