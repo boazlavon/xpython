@@ -226,15 +226,16 @@ class PyVMTraced(PyVM):
             # for i, frame_info in enumerate(stack):
             #     print(f"Frame {i}: Function '{frame_info.function}' in {frame_info.filename}, line {frame_info.lineno}")
             if log.isEnabledFor(logging.INFO):
+                pass
                 #print(f"<ExecutionEntry {counter}>")
-                print(f"[[[ExecutionEntry]]]")
+                # print(f"[[[ExecutionEntry]]]")
                 #print(f"\t<Count> {counter} </Counter>")
                 #print(f"\t<ByteCodeExecution>")
-                self.log(byte_name, intArg, arguments, opoffset, line_number)
+                # self.log(byte_name, intArg, arguments, opoffset, line_number)
                 #print(f"\t</ByteCodeExecution>")
                 #print(f'[[[InstructionOpOffset]]] {opoffset} [[[/InstructionOpOffset]]]')
-                print('[[[/ExecutionEntry]]]')
-                print()
+                # print('[[[/ExecutionEntry]]]')
+                # print()
 
             if (
                 frame.f_trace

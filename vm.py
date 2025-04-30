@@ -277,14 +277,14 @@ class PyVM(object):
         # The callargs default is safe because we never modify the dict.
         # pylint: disable=dangerous-default-value
 
-        print('[[[NewFrame]]]')
-        log.debug(
-            "make_frame: code=%r, callargs=%s, f_globals=%r, f_locals=%r",
-            code,
-            repper(callargs),
-            (type(f_globals), id(f_globals)),
-            (type(f_locals), id(f_locals)),
-        )
+        # print('[[[NewFrame]]]')
+        # log.debug(
+        #     "make_frame: code=%r, callargs=%s, f_globals=%r, f_locals=%r",
+        #     code,
+        #     repper(callargs),
+        #     (type(f_globals), id(f_globals)),
+        #     (type(f_locals), id(f_locals)),
+        # )
         if f_globals is not None:
             f_globals = f_globals
             if f_locals is None:
@@ -319,8 +319,8 @@ class PyVM(object):
         # THINK ABOUT: should this go into making the frame?
         frame.linestarts = dict(self.opc.findlinestarts(code, dup_lines=True))
 
-        log.debug("%r", frame)
-        print('[[[/NewFrame]]]')
+        # log.debug("%r", frame)
+        # print('[[[/NewFrame]]]')
         return frame
 
     def push_frame(self, frame):
@@ -616,10 +616,10 @@ class PyVM(object):
                                 False,
                             )
                     exception_type = self.last_exception[0]
-                    print(f"[[[ExecutionEntry]]]")
-                    print(f"[[[ExceptionType]]]\n{exception_type}\n[[[/ExceptionType]]]")
-                    print(f"[[[InstructionOpOffset]]]\n{offset}\n[[[/InstructionOpOffset]]]")
-                    print('[[[/ExecutionEntry]]]')
+                    # print(f"[[[ExecutionEntry]]]")
+                    # print(f"[[[ExceptionType]]]\n{exception_type}\n[[[/ExceptionType]]]")
+                    # print(f"[[[InstructionOpOffset]]]\n{offset}\n[[[/InstructionOpOffset]]]")
+                    # print('[[[/ExecutionEntry]]]')
                 if not self.last_traceback:
                     self.last_traceback = traceback_from_frame(self.frame)
                 self.in_exception_processing = True
@@ -758,10 +758,10 @@ class PyVM(object):
                                     line_number,
                                     False,
                                 )
-                        print(f"[[[ExecutionEntry]]]")
-                        print(f"[[[ExceptionType]]]\n{exception_type}\n[[[/ExceptionType]]]")
-                        print(f"[[[InstructionOpOffset]]]\n{offset}\n[[[/InstructionOpOffset]]]")
-                        print('[[[/ExecutionEntry]]]')
+                        # print(f"[[[ExecutionEntry]]]")
+                        # print(f"[[[ExceptionType]]]\n{exception_type}\n[[[/ExceptionType]]]")
+                        # print(f"[[[InstructionOpOffset]]]\n{offset}\n[[[/InstructionOpOffset]]]")
+                        # print('[[[/ExecutionEntry]]]')
                         if self.last_traceback is None:
                             self.last_traceback = traceback_from_frame(frame)
                         self.in_exception_processing = True
